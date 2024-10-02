@@ -1,0 +1,49 @@
+.model small
+.stack 100h
+
+.data
+    array DB 5, 1, 7, 2, 8
+    largest DB 0
+    output DB 'Largest number is: $'
+    number DB '0'
+
+.code
+main proc
+    mov ax, @data
+    mov ds, ax
+
+    mov cx, 5
+    lea si, array
+    mov al, [si]
+    mov largest, al
+
+find_largest:
+    inc si
+    dec cx
+    jz done
+
+    mov al, [si]
+    cmp al, largest
+    jle find_largest
+    mov largest, al
+
+    jmp find_largest
+
+done:
+    mov al, largest
+    add al, '0'
+    mov number, al
+
+    mov ah, 09h
+    lea dx, output
+    int 21h
+
+    mov ah, 02h
+    mov dl, number
+    int 21h
+
+    mov ah, 4Ch
+    int 21h
+
+main endp
+end main
